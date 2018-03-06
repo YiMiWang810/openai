@@ -1,0 +1,63 @@
+也可在简书查看 https://www.jianshu.com/p/b9f14b8b1bab
+
+roboschool是openai在17年5月发布的一个用于模拟机器人的控制训练的开源平台，里面包含许多的模拟环境，文末会添加官网的地址，但是目前官网上的安装过程有一些遗漏，直接按照那个来装，会出现很多问题。
+
+我的系统是Ubuntu 16.04，我的Anaconda里面已经装过python3.5,gym，numpy，tensorflow了。如果还没装的可以pip直接安装，之后再进行roboschool的安装。
+
+1.创建一个安装目录，如果是使用anconda的，建议就把目录放在这个目录下面，/home/wangbingjie/anaconda3/lib/python3.5/site-packages/robot，这个目录下安装的可以通过conda list看到，后面用pycharm编译的时候比较容易设置解释器。
+
+
+
+2.cd 切换到刚才创建的目录，执行
+
+git clone http://github.com/openai/roboschool.git 
+
+3.创建环境变量，可以在home目录下，ctrl+h看到.bashrc这个文件，打开之后在最后面添加环境变量：
+
+#roboschool
+
+export ROBOSCHOOL_PATH="/home/wangbingjie/anaconda3/lib/python3.5/
+
+site-packages/robot/roboschool"
+
+export PATH="$PATH:ROBOSCHOOL_PATH"
+
+这个地方注意，上一步的时候在robot目录下面clone了一个roboschool的文件夹，这个环境变量的的路径要一直写到roboschool。
+
+或者也可以第2步之后，cd roboschool，然后$ROBOSCHOOL_PATH=pwd，以免出错。
+
+4.安装依赖环境，ubuntu直接参考官网即可，如果出现OpenGL的错误，再sudo pip3 install pyopengl。
+
+apt install cmake ffmpeg pkg-config qtbase5-dev libqt5opengl5-dev libassimp-dev libpython3.5-dev libboost-python-dev libtinyxml-dev
+
+5.安装bullet3
+
+git clone https://github.com/olegklimov/bullet3 -b roboschool_self_collisionmkdir bullet3/buildcdbullet3/buildcmake -DBUILD_SHARED_LIBS=ON -DUSE_DOUBLE_PRECISION=1 -DCMAKE_INSTALL_PREFIX:PATH=$ROBOSCHOOL_PATH/roboschool/cpp-household/bullet_local_install -DBUILD_CPU_DEMOS=OFF -DBUILD_BULLET2_DEMOS=OFF -DBUILD_EXTRAS=OFF  -DBUILD_UNIT_TESTS=OFF -DBUILD_CLSOCKET=OFF -DBUILD_ENET=OFF -DBUILD_OPENGL3_DEMOS=OFF ..make -j4make installcd../..
+
+bullet3的安装位置我的是在site-packages下面新建一个bullet3目录，然后进行上面这些操作。cmake 会在/home/wangbingjie/anaconda3/lib/python3.5/site-packages/robot/roboschool/roboschool/cpp-household目录下面创建bullet_local_install，如果第三步的PATH路径不对，这里就会出现问题，它一定要在这里面，如果roboschool目录下面除了它自己的一个roboschool文件夹之外又出现一个roboschool:，或者其他位置，最后都会出错，甚至即使显示roboschool安装成功，import也会显示no modle named roboschool.
+
+6.安装roboschool包
+
+pip3 install -e$ROBOSCHOOL_PATH
+
+
+7.验证roboschool是否能用
+
+A. 在终端输入python,然后import roboschool,如果出现/home//anaconda3/bin/...
+
+/lib/libstdc++.so.6:vision  GLIBCXX-3.4.21 not found,
+
+可以通过conda install libgcc安装一下就行了。
+
+B. conda list 也可以看roboschool是否安装好。
+
+C. 在终端直接运行，我的会出现以下错误
+
+python$ROBOSCHOOL_PATH/agent_zoo/demo_race2.py
+
+
+试了一些方法，但是没有成功，不过Pycharm里面运行没有问题。
+
+
+
+供大家参考，有什么问题欢迎留言一起探讨学习。
